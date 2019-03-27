@@ -1,3 +1,7 @@
 
 .idea/
 *.pyc
+*.yuv
+*.bin
+*.log
+*.tfrecords

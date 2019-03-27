@@ -282,11 +282,11 @@ class MyEstimator:
                  need_output=False):
 
         # paths:
-        input_path = './data/' + self.video_name + '_QP' + str(self.QP) + '_IP_rec.yuv'
-        label_path = './data/' + self.video_name + '.yuv'
+        input_path = './data/videos/' + self.video_name + '_QP' + str(self.QP) + '_IP_rec.yuv'
+        label_path = './data/videos/' + self.video_name + '.yuv'
         output_path = None
         if need_output:
-            output_path = './data/' + self.video_name + '_QP' + str(self.QP) + '_IP_rec_' + \
+            output_path = './data/videos/' + self.video_name + '_QP' + str(self.QP) + '_IP_rec_' + \
                           'B' + str(self.count_B) + 'U' + str(self.count_U) + 'C' + str(self.channel) + '.yuv'
 
         # info:

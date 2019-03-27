@@ -1,3 +1,5 @@
+"""Tools that reads Tensorflow log files and converts them to excel."""
+
 from tensorboard.backend.event_processing import event_accumulator
 import csv
 import os
