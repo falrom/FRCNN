@@ -69,6 +69,7 @@ class MyEstimator:
             if mode == self.MODE_TRAIN:
                 self.global_step = tf.Variable(0, trainable=False, name=tf.GraphKeys.GLOBAL_STEP)
                 tf.add_to_collections([tf.GraphKeys.GLOBAL_STEP, 'var_list'], self.global_step)
+                self.learning_rate = tf.placeholder(dtype=tf.float32, name='learning_rate')
 
         # inference:
         self.drrn_predictions = DRRN(
@@ -112,13 +113,14 @@ class MyEstimator:
               test_batch_size=500,
               steps=None, max_steps=None,
               test_interval=50,
-              save_interval=200,
+              save_interval=500,
               learning_rate=0.001,
+              decay=None,
               use_L1_loss=False):
 
         # params:
         time_str = time_str or get_time_str()
-        self.learning_rate = learning_rate
+        # self.learning_rate = learning_rate
         self.use_L1_loss = use_L1_loss
         save_max_psnr = [36.0]
 
@@ -141,6 +143,8 @@ class MyEstimator:
             self.info_train['old_ckpt'] = latest_ckpt_path
         self.info_train['time_str'] = time_str
         self.info_train['learning_rate'] = str(learning_rate)
+        if decay:
+            self.info_train['lr_decay'] = str(decay)
         self.info_train['patch_size'] = str(height) + 'x' + str(width)
         self.info_train['train_batch_size'] = str(train_batch_size)
         self.info_train['test_batch_size'] = str(test_batch_size)
@@ -204,15 +208,19 @@ class MyEstimator:
         # define process functions:
         def train_once(step):
             train_batch = sess.run(get_train_batch)
+            lr = learning_rate
+            if decay:
+                lr = learning_rate * (decay**step)
             feed_dic = {
                 self.inputs: train_batch['input'],
                 self.labels: train_batch['label'],
-                self.is_training: True}
+                self.is_training: True,
+                self.learning_rate: lr}
             mse, mse_log, psnr, psnr_log, _ = sess.run(
                 [self.mse, log_train_MSE, self.psnr_float, log_train_PSNR, self.train_op], feed_dic)
             log_writer.add_summary(mse_log, step)
             log_writer.add_summary(psnr_log, step)
-            print('step: %d  train-loss: %.10f  train-PSNR: %.6f' % (step, mse, psnr))
+            print('step: %d  lr: %.8f  train-loss: %.10f  train-PSNR: %.6f' % (step, lr, mse, psnr))
 
         def test_once(step):
             test_batch = sess.run(get_test_batch)

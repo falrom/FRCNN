@@ -5,3 +5,5 @@
 *.bin
 *.log
 *.tfrecords
+*.ubun
+*.txt

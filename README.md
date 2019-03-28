@@ -21,8 +21,23 @@ Run file `run.py` to train or evaluate the FRCNN after dataset is ready.
 To train the FRCNN:
 
 ```bash
-python run.py -g 0 train -b 1 -u 9 -c 32 -v BasketballDrive_1920x1080_50_000to049 -q 37 --max_steps 300000 --no_BN_ru --no_BN_end --L1
+python run.py -g 0 train -b 1 -u 9 -c 32 -v BasketballDrive_1920x1080_50_000to049 -q 37 --max_steps 300000 --no_BN_ru --no_BN_end --L1 --decay 0.999991
 ```
+
+#### arguments
+
+> -g 0: GPU device selection  
+> train: run mode  
+> -b 1: use 1 recursive block in DRRN  
+> -u 9: use 9 residual units in every recursive block  
+> -c 32: channel number is 32 in CNN  
+> -v Basket...000to049: video name  
+> -q 37: QP number in codex  
+> --max_steps 300000: train steps  
+> --no_BN_ru: disable the BN layers in residual units  
+> --no_BN_end: disable the BN layers in the end convolution layer  
+> --L1: use L1 loss, not MSE  
+> --decay: learning rate decay
 
 To evaluate the FRCNN:
 

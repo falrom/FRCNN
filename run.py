@@ -24,8 +24,10 @@ parser_train.add_argument('--steps', type=int,
 parser_train.add_argument('--max_steps', type=int,
                           help='stop to train when the step reach the max_steps (invalid when --steps is not None)')
 parser_train.add_argument('--test_interval', default=50, type=int, help='how often to test (default: 50)')
-parser_train.add_argument('--save_interval', default=200, type=int, help='how often to save (default: 200)')
+parser_train.add_argument('--save_interval', default=500, type=int, help='how often to save (default: 200)')
 parser_train.add_argument('--lr', default=0.001, type=float, help='learning rate (default: 0.001)')
+parser_train.add_argument('--decay', default=0, type=float,
+                          help='learning rate decay: lr = lr * (decay^step) (default: No decay)')
 parser_train.add_argument('--no_BN_begin', action='store_true', default=False,
                           help='if you do NOT want to use BatchNormalization layer at the beginning of each recursive block')
 parser_train.add_argument('--no_BN_ru', action='store_true', default=False,
@@ -101,6 +103,7 @@ if args.mode == 'train':
         test_interval=args.test_interval,
         save_interval=args.save_interval,
         learning_rate=args.lr,
+        decay=args.decay,
         use_L1_loss=args.L1
     )
 

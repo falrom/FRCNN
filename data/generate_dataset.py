@@ -6,15 +6,22 @@ from yuv_io import YUVwrite
 from cut_TFR import progress_bar
 from cut_TFR import generate
 
-path_source = './videos/BasketballDrive_1920x1080_50.yuv'
-height = 1080
-width = 1920
-fps = 50
-QP = 32
+path_source = './videos/ParkScene_1920x1080_24.yuv'
+height = None
+width = None
+fps = None
+QP = 37
 frame_bgn = 0
 frame_num = 50
 patch_size = 41  # 31  # 41
 step = 36  # 21  # 36
+
+OrigName = os.path.splitext(os.path.split(path_source)[-1])[0]
+_, size_str, fps_str = OrigName.split('_')
+fps = fps or int(fps_str)
+width_str, height_str = size_str.split('x')
+height = height or int(height_str)
+width = width or int(width_str)
 
 # Paths ##################################################################
 # Naming conventions:
@@ -30,7 +37,6 @@ step = 36  # 21  # 36
 # 解码码流文件名   : BasketballDrive_1920x1080_50_000to049_QP25_IP_rec.yuv
 # TFrecords文件名 : BasketballDrive_1920x1080_50_000to049_QP25_IP_41x41.tfrecords
 
-OrigName = os.path.splitext(os.path.split(path_source)[-1])[0]
 StartNum = str('%03d' % frame_bgn)
 EndNum = str('%03d' % (frame_bgn + frame_num - 1))
 mode = 'IP'
