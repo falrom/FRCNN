@@ -174,6 +174,7 @@ class MyEstimator:
             log_test_MSE = tf.summary.scalar('MSE_test', self.mse)
             log_train_PSNR = tf.summary.scalar('PSNR_train', self.psnr_float)
             log_test_PSNR = tf.summary.scalar('PSNR_test', self.psnr_float)
+            log_lr = tf.summary.scalar('learning_rate', self.learning_rate)
             log_writer = tf.summary.FileWriter(log_dir)
             log_writer.add_graph(self.train_graph)
             log_writer.flush()
@@ -216,10 +217,11 @@ class MyEstimator:
                 self.labels: train_batch['label'],
                 self.is_training: True,
                 self.learning_rate: lr}
-            mse, mse_log, psnr, psnr_log, _ = sess.run(
-                [self.mse, log_train_MSE, self.psnr_float, log_train_PSNR, self.train_op], feed_dic)
+            mse, mse_log, psnr, psnr_log, lr_log, _ = sess.run(
+                [self.mse, log_train_MSE, self.psnr_float, log_train_PSNR, log_lr, self.train_op], feed_dic)
             log_writer.add_summary(mse_log, step)
             log_writer.add_summary(psnr_log, step)
+            log_writer.add_summary(lr_log, step)
             print('step: %d  lr: %.8f  train-loss: %.10f  train-PSNR: %.6f' % (step, lr, mse, psnr))
 
         def test_once(step):

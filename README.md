@@ -21,7 +21,7 @@ Run file `run.py` to train or evaluate the FRCNN after dataset is ready.
 To train the FRCNN:
 
 ```bash
-python run.py -g 0 train -b 1 -u 9 -c 32 -v BasketballDrive_1920x1080_50_000to049 -q 37 --max_steps 300000 --no_BN_ru --no_BN_end --L1 --decay 0.999991
+python run.py -g 0 train -b 1 -u 9 -c 32 -v BasketballDrive_1920x1080_50_000to049 -q 37 --max_steps 400000 --no_BN_ru --no_BN_end --L1 --lr 0.002 --decay 0.999995
 ```
 
 #### arguments
@@ -57,7 +57,7 @@ python run.py evaluate -h
 
 Compressing network weights involves two steps: **weights precision reduction** and **Huffman coding**.
 
-#### weights precision reduction
+#### Weights precision reduction
 
 #### Huffman coding
 
