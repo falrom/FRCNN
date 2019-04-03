@@ -37,7 +37,7 @@ python run.py -g 0 train -b 1 -u 9 -c 32 -v BasketballDrive_1920x1080_50_000to04
 > --no_BN_ru: disable the BN layers in residual units  
 > --no_BN_end: disable the BN layers in the end convolution layer  
 > --L1: use L1 loss, not MSE  
-> --decay: learning rate decay
+> --decay: learning rate decay: lr = lr * (decay^step)
 
 To evaluate the FRCNN:
 

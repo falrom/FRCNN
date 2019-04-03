@@ -95,8 +95,14 @@ class MyEstimator:
                 self.loss = self.loss_L1
             update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
             with tf.control_dependencies(update_ops):
-                self.train_op = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(
-                    self.loss, global_step=self.global_step)
+                if self.optimizer == 'sgd':
+                    self.train_op = tf.train.GradientDescentOptimizer(learning_rate=self.learning_rate).minimize(
+                        self.loss, global_step=self.global_step)
+                elif self.optimizer == 'adam':
+                    self.train_op = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(
+                        self.loss, global_step=self.global_step)
+                else:
+                    raise Exception('ERROR: Unknown optimizer name.')
             self.variable_init = tf.global_variables_initializer()
         if mode == self.MODE_EVAL:
             self.mse = MSE_float(predictions=self.drrn_predictions, labels=self.labels)
@@ -116,12 +122,14 @@ class MyEstimator:
               save_interval=500,
               learning_rate=0.001,
               decay=None,
-              use_L1_loss=False):
+              use_L1_loss=False,
+              optimizer='adam'):
 
         # params:
         time_str = time_str or get_time_str()
         # self.learning_rate = learning_rate
         self.use_L1_loss = use_L1_loss
+        self.optimizer = optimizer.lower()
         save_max_psnr = [36.0]
 
         # paths:
@@ -155,6 +163,7 @@ class MyEstimator:
         self.info_train['loss_function'] = 'L2-MSE'
         if use_L1_loss:
             self.info_train['loss_function'] = 'L1-absolute_difference'
+        self.info_train['optimizer'] = optimizer
         print('\n\n********** Train **********')
         print_info([self.info_train])
         print('********** ***** **********')
@@ -211,7 +220,7 @@ class MyEstimator:
             train_batch = sess.run(get_train_batch)
             lr = learning_rate
             if decay:
-                lr = learning_rate * (decay**step)
+                lr = learning_rate * (decay ** step)
             feed_dic = {
                 self.inputs: train_batch['input'],
                 self.labels: train_batch['label'],

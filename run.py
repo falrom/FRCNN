@@ -35,6 +35,7 @@ parser_train.add_argument('--no_BN_ru', action='store_true', default=False,
 parser_train.add_argument('--no_BN_end', action='store_true', default=False,
                           help='if you do NOT want to use BatchNormalization layer at the end of the DRRN net')
 parser_train.add_argument('--L1', action='store_true', default=False, help='if you want to use the L1 loss to train')
+parser_train.add_argument('--optimizer', default='adam', help='The optimizer you want to use ("adam" or "sgd").')
 
 # evaluate mode:
 parser_evaluate = subparsers.add_parser(
@@ -104,7 +105,8 @@ if args.mode == 'train':
         save_interval=args.save_interval,
         learning_rate=args.lr,
         decay=args.decay,
-        use_L1_loss=args.L1
+        use_L1_loss=args.L1,
+        optimizer=args.optimizer
     )
 
 elif args.mode == 'evaluate':
