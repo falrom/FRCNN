@@ -6,11 +6,11 @@ from yuv_io import YUVwrite
 from cut_TFR import progress_bar
 from cut_TFR import generate
 
-path_source = './videos/ParkScene_1920x1080_24.yuv'
+path_source = './videos/BQTerrace_1920x1080_60.yuv'
 height = None
 width = None
 fps = None
-QP = 37
+QP = 22
 frame_bgn = 0
 frame_num = 50
 patch_size = 41  # 31  # 41
@@ -84,8 +84,8 @@ writer = tf.python_io.TFRecordWriter(path_tfr)
 
 print('Reading files...', end=' ')
 sys.stdout.flush()
-im_input, u, v = YUVread(path_rec, [height, width])
-im_label, u, v = YUVread(path_cut, [height, width])
+im_input, _, _ = YUVread(path_rec, [height, width])
+im_label, _, _ = YUVread(path_cut, [height, width])
 print('Done.', flush=True)
 
 number = im_input.shape[0]

@@ -1,3 +1,4 @@
+import tensorflow as tf
 import numpy as np
 import cv2
 import os
@@ -262,7 +263,7 @@ def save_YUV_img(y, u, v, output_path, mode='420', ext='.png'):
                 cv2.COLOR_YUV2BGR)
             cv_imwrite(path + '_' + str(fn) + ext, img, ext=ext)
 
-            
+
 def calculate_variables(var_list, print_vars=False):
     all_num = 0
     all_size = 0
@@ -282,3 +283,27 @@ def calculate_variables(var_list, print_vars=False):
     print('Variables  size  : %f Kb' % (all_size * 8 / 1024))
     print('Variables  size  : %f MB' % (all_size / 1024 / 1024))
     print('Variables  size  : %f Mb' % (all_size * 8 / 1024 / 1024))
+
+
+def transform_ckpt_bit_width(ckpt_path, output_path, bit_width):
+    dtype_dict = {
+        '16': tf.float16,
+        '32': tf.float32
+    }
+    dtype = dtype_dict[bit_width]
+
+    ckpt_reader = tf.train.load_checkpoint(ckpt_path)
+    var_shape_dict = ckpt_reader.get_variable_to_shape_map()
+
+    graph = tf.Graph()
+    with graph.as_default():
+        for name in var_shape_dict:
+            if name[:len('DRRN')] != 'DRRN': continue
+            if name.find('Adam') >= 0: continue
+            tf.Variable(ckpt_reader.get_tensor(name), dtype=dtype, name=name)
+        init = tf.global_variables_initializer()
+        saver = tf.train.Saver()
+
+    with tf.Session(graph=graph) as sess:
+        sess.run(init)
+        saver.save(sess=sess, save_path=output_path, write_meta_graph=False)

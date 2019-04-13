@@ -1,5 +1,6 @@
 
 .idea/
+.cache/
 *.pyc
 *.yuv
 *.bin
@@ -7,3 +8,11 @@
 *.tfrecords
 *.ubun
 *.txt
+*.data-00000-of-00001
+*.index
+*checkpoint
+*.xlsx
+*.zip
+*.doc
+*.xla
+*.xls

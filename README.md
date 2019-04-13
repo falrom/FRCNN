@@ -21,7 +21,7 @@ Run file `run.py` to train or evaluate the FRCNN after dataset is ready.
 To train the FRCNN:
 
 ```bash
-python run.py -g 0 train -b 1 -u 9 -c 32 -v BasketballDrive_1920x1080_50_000to049 -q 37 --max_steps 400000 --no_BN_ru --no_BN_end --L1 --lr 0.002 --decay 0.999995
+python run.py -g 0 train -b 1 -u 9 -c 32 -v BasketballDrive_1920x1080_50_000to049 -q 37 --max_steps 500000 --no_BN_ru --no_BN_end --L1 --lr 0.002 --decay 0.999995
 ```
 
 #### arguments
@@ -42,7 +42,7 @@ python run.py -g 0 train -b 1 -u 9 -c 32 -v BasketballDrive_1920x1080_50_000to04
 To evaluate the FRCNN:
 
 ```bash
-???
+python run.py -g 0 evaluate -b 1 -u 9 -c 32 -v BasketballDrive_1920x1080_50_000to049 -q 37 --height 1080 --width 1920 --no_BN_ru --no_BN_end --ckpt checkpoints/DRRNoverfit_B1U9C32/BasketballDrive_1920x1080_50_000to049_QP37/20190330123736/20190331024130-400000
 ```
 
 Or type these lines in shell for more help:
@@ -55,13 +55,48 @@ python run.py evaluate -h
 
 ### Compress
 
-Compressing network weights involves two steps: **weights precision reduction** and **Huffman coding**.
+Compressing network weights involves two steps: **weights precision reduction** and **Huffman coding**, which are written in file `utils.py` and file `huffman.py`, respectively.
 
-#### Weights precision reduction
+Here is a one-click script `compress.py`:
 
-#### Huffman coding
+```bash
+python compress.py -i ./checkpoints/DRRNoverfit_B1U9C32/BasketballDrive_1920x1080_50_000to049_QP32/20190407223926/20190408171134-500000
+```
 
+Several files will be generated:
 
+```
+# Original checkpoint:
+20190408171134-500000.data-00000-of-00001
+20190408171134-500000.index
+```
+
+```
+# 16bit checkpoint:
+20190408171134-500000-16bit.data-00000-of-00001
+20190408171134-500000-16bit.index
+```
+
+```
+# 16big-Huffman checkpoint:
+20190412075210-500000-16bit-hfm.data-00000-of-00001
+```
+
+```
+# 16big-deHuffman checkpoint:
+20190412075210-500000-16bit-hfm-dehfm.data-00000-of-00001
+20190412075210-500000-16bit-hfm-dehfm.index
+```
+
+```
+# Final 32bit checkpoint:
+20190412075210-500000-16bit-hfm-dehfm-32bit.data-00000-of-00001
+20190412075210-500000-16bit-hfm-dehfm-32bit.index
+```
+
+The *16big-Huffman checkpoint* (`20190412075210-500000-16bit-hfm.data-00000-of-00001`) is the file that needs to be transferred eventually.
+
+The *Final 32bit checkpoint* (`20190412075210-500000-16bit-hfm-dehfm-32bit.data-00000-of-00001` & `20190412075210-500000-16bit-hfm-dehfm-32bit.index`) is the one you should evaluate with.
 
 
 

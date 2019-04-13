@@ -130,7 +130,7 @@ class MyEstimator:
         # self.learning_rate = learning_rate
         self.use_L1_loss = use_L1_loss
         self.optimizer = optimizer.lower()
-        save_max_psnr = [36.0]
+        save_max_psnr = [30.0]
 
         # paths:
         log_dir = os.path.join('./logs', self.net_name, self.video_name + '_QP' + str(self.QP), time_str)

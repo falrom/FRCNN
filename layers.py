@@ -442,7 +442,7 @@ def dataset_YUV(input_path, label_path, batch_size, patch_height, patch_width, s
 if __name__ == '__main__':
     print('logs: define grapth...\n')
     inputs = tf.placeholder(tf.float32, [None, 41, 41, 1])
-    drrn = DRRN(inputs, 1, 9, 64, True, 'DRRNoverfit_B1U9C64', True, False, False, collections=['vars'])
+    drrn = DRRN(inputs, 1, 9, 32, True, 'DRRNoverfit_B1U9C32', True, False, False, collections=['var_list'])
     # drrn = DRRN(inputs, 1, 9, 64, True, 'DRRNoverfit_B1U9C64', collections=['vars'])
-    vars = tf.get_collection('vars')
+    vars = tf.get_collection('var_list')
     calculate_variables(vars, True)
