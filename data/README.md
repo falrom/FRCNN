@@ -59,6 +59,7 @@ python yuvio.py
 
 在`cut_TFR.py`文件中设置**输入文件名**、**编码QP**、**切片尺寸信息**，运行该文件即可。生成的 TFrecords 文件在`./TFRdata`目录下。
 
-*\* Number of patches: 76850 (For patch_size=41 step=36 height=1080 width=1920)*
+- Number of patches: 76850 (For frames=50 patch_size=41 step=36 height=1080 width=1920)
+- Number of patches: 74360 (For frames=260 patch_size=41 step=36 height=480 width=832)
 
 
