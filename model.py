@@ -346,6 +346,8 @@ class MyEstimator:
         # run:
         print('\n** Evaluating:')
         t = time.time()
+        psnr_uint8_a_collection = []
+        psnr_uint8_b_collection = []
         psnr_gain_collection = []
         outputs = None
         for frame, batch in enumerate(get_batch):
@@ -374,11 +376,18 @@ class MyEstimator:
             print('Frame %d after  process: MSE = %.10f, PSNR(float) = %.6f, PSNR = %.6f' % \
                   (frame, mse_a, psnr_float_a, psnr_uint8_a), flush=True)
             psnr_gain = psnr_uint8_a - psnr_uint8_b
+            psnr_uint8_a_collection.append(psnr_uint8_a)
+            psnr_uint8_b_collection.append(psnr_uint8_b)
             psnr_gain_collection.append(psnr_gain)
             print('PSNR Gain: %.6f' % psnr_gain)
             print('--------------------------------------------------------------------------------------')
 
+        psnr_uint8_a_mean = (sum(psnr_uint8_a_collection) / len(psnr_uint8_a_collection))
+        psnr_uint8_b_mean = (sum(psnr_uint8_b_collection) / len(psnr_uint8_b_collection))
         psnr_gain_mean = (sum(psnr_gain_collection) / len(psnr_gain_collection))
+
+        print('Average PSNR before process: %.6f' % psnr_uint8_b_mean)
+        print('Average PSNR after  process: %.6f' % psnr_uint8_a_mean)
         print('Average PSNR gain: %.6f' % psnr_gain_mean)
         print('Time cost: %.6fs' % (time.time() - t))
         print('Done.')

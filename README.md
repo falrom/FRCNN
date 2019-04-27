@@ -65,34 +65,24 @@ python compress.py -i ./checkpoints/DRRNoverfit_B1U9C32/BasketballDrive_1920x108
 
 Several files will be generated:
 
-```
-# Original checkpoint:
-20190408171134-500000.data-00000-of-00001
-20190408171134-500000.index
-```
-
-```
-# 16bit checkpoint:
-20190408171134-500000-16bit.data-00000-of-00001
-20190408171134-500000-16bit.index
-```
-
-```
-# 16big-Huffman checkpoint:
-20190412075210-500000-16bit-hfm.data-00000-of-00001
-```
-
-```
-# 16big-deHuffman checkpoint:
-20190412075210-500000-16bit-hfm-dehfm.data-00000-of-00001
-20190412075210-500000-16bit-hfm-dehfm.index
-```
-
-```
-# Final 32bit checkpoint:
-20190412075210-500000-16bit-hfm-dehfm-32bit.data-00000-of-00001
-20190412075210-500000-16bit-hfm-dehfm-32bit.index
-```
+> \# Original checkpoint:  
+> 20190408171134-500000.data-00000-of-00001  
+> 20190408171134-500000.index
+>
+> \# 16bit checkpoint:  
+> 20190408171134-500000-16bit.data-00000-of-00001  
+> 20190408171134-500000-16bit.index
+>
+> \# 16big-Huffman checkpoint:  
+> 20190412075210-500000-16bit-hfm.data-00000-of-00001
+>
+> \# 16big-deHuffman checkpoint:  
+> 20190412075210-500000-16bit-hfm-dehfm.data-00000-of-00001  
+> 20190412075210-500000-16bit-hfm-dehfm.index
+>
+> \# Final 32bit checkpoint:  
+> 20190412075210-500000-16bit-hfm-dehfm-32bit.data-00000-of-00001  
+> 20190412075210-500000-16bit-hfm-dehfm-32bit.index
 
 The *16big-Huffman checkpoint* (`20190412075210-500000-16bit-hfm.data-00000-of-00001`) is the file that needs to be transferred eventually.
 

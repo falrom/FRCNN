@@ -12,6 +12,8 @@ encode parameters : --fps ${fps} --qp ${QP} --ipratio 1 --bframes 0
 decoder version   : HM TAppDecoder 16.0
 ```
 
+*\* 本仓库仅提供了 Windows 系统下可用的 x265 和 HM-decoder 的`.exe`可执行程序。其他系统下请自行使用源码编译。*
+
 文件命名规范：
 
 ```
@@ -59,7 +61,11 @@ python yuvio.py
 
 在`cut_TFR.py`文件中设置**输入文件名**、**编码QP**、**切片尺寸信息**，运行该文件即可。生成的 TFrecords 文件在`./TFRdata`目录下。
 
-- Number of patches: 76850 (For frames=50 patch_size=41 step=36 height=1080 width=1920)
-- Number of patches: 74360 (For frames=260 patch_size=41 step=36 height=480 width=832)
+---------------------------------------------------------------------------------------------
+
+- Number of patches (Class A): 77000 (For frames=25 patch_size=41 step=36 height=1600 width=2560)
+- Number of patches (Class B): 76850 (For frames=50 patch_size=41 step=36 height=1080 width=1920)
+- Number of patches (Class C): 74360 (For frames=260 patch_size=41 step=36 height=480 width=832)
+
 
 

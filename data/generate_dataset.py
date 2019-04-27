@@ -19,7 +19,7 @@ def generate_dataset(
         step=36  # 21  # 36
 ):
     OrigName = os.path.splitext(os.path.split(path_source)[-1])[0]
-    _, size_str, fps_str = OrigName.split('_')
+    _, size_str, fps_str = OrigName.split('_')[:3]
     fps = fps or int(fps_str)
     width_str, height_str = size_str.split('x')
     height = height or int(height_str)
@@ -62,13 +62,13 @@ def generate_dataset(
         print('Already exists.')
 
     # Codex ##################################################################
-    print('\n·········· Codex ··········')
+    print('\n·········· Codec ··········')
     print('Source YUV:', path_cut)
     print('Target bin:', path_bin)
     print('Decode YUV:', path_rec)
     print('Encoding...')
     os.system(
-        'x265.exe --input-res ' + str(height) + 'x' + str(width) + ' --fps ' + str(fps) + ' ' + path_cut + ' -o ' +
+        'x265.exe --input-res ' + str(width) + 'x' + str(height) + ' --fps ' + str(fps) + ' ' + path_cut + ' -o ' +
         path_bin + ' --qp ' + str(QP) + ' --ipratio 1 --bframes 0 --psnr --ssim 1>>encode.log 2>&1')
     print('Decoding...')
     os.system('TAppDecoder.exe -b ' + path_bin + ' -o ' + path_rec + ' 1>>decode.log 2>&1')
@@ -103,11 +103,7 @@ def generate_dataset(
 
 if __name__ == '__main__':
     videos = [
-        './videos/BasketballDrill_832x480_50.yuv',
-        './videos/BasketballDrillText_832x480_50.yuv',
-        './videos/BQMall_832x480_60.yuv',
-        './videos/PartyScene_832x480_50.yuv',
-        './videos/RaceHorses_832x480_30.yuv',
+        './videos/BasketballDrill_832x480_50.yuv'
     ]
     QPs = [22, 27, 32, 37]
     frame_bgn = 0
