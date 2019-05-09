@@ -103,11 +103,12 @@ def generate_dataset(
 
 if __name__ == '__main__':
     videos = [
-        './videos/BasketballDrill_832x480_50.yuv'
+        './videos/Traffic_2560x1600_30_crop.yuv',
+        './videos/PeopleOnStreet_2560x1600_30_crop'
     ]
     QPs = [22, 27, 32, 37]
     frame_bgn = 0
-    frame_num = 260
+    frame_num = 25
 
     for video in videos:
         for QP in QPs:

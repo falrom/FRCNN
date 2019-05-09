@@ -216,7 +216,7 @@ class MyEstimator:
             steps_to_run = steps or max(max_steps - step, 0)
 
         # define process functions:
-        def train_once(step):
+        def train_once(step, pring_log=True):
             train_batch = sess.run(get_train_batch)
             lr = learning_rate
             if decay:
@@ -231,9 +231,10 @@ class MyEstimator:
             log_writer.add_summary(mse_log, step)
             log_writer.add_summary(psnr_log, step)
             log_writer.add_summary(lr_log, step)
-            print('step: %d  lr: %.8f  train-loss: %.10f  train-PSNR: %.6f' % (step, lr, mse, psnr))
+            if pring_log:
+                print('step: %d  lr: %.8f  train-loss: %.10f  train-PSNR: %.6f' % (step, lr, mse, psnr))
 
-        def test_once(step):
+        def test_once(step, pring_log=True):
             test_batch = sess.run(get_test_batch)
             feed_dic = {
                 self.inputs: test_batch['input'],
@@ -244,31 +245,39 @@ class MyEstimator:
             log_writer.add_summary(mse_log, step)
             log_writer.add_summary(psnr_log, step)
             log_writer.flush()
-            print('--------------------------------------------------------------')
-            print('step: %d  test-loss: %.10f  test-PSNR: %.6f' % (step, mse, psnr))
-            print('--------------------------------------------------------------')
+            if pring_log:
+                print('--------------------------------------------------------------')
+                print('step: %d  test-loss: %.10f  test-PSNR: %.6f' % (step, mse, psnr))
+                print('--------------------------------------------------------------')
             return psnr
 
-        def save_once(step):
-            print('save:', saver_all.save(
+        def save_once(step, pring_log=True):
+            save_path = os.path.join(backup_dir, get_time_str())
+            saver_all.save(
                 sess=sess,
-                save_path=os.path.join(backup_dir, get_time_str()),
+                save_path=save_path,
                 global_step=step,
-                write_meta_graph=False))
+                write_meta_graph=False)
+            if pring_log:
+                print('save:', save_path)
+            return save_path
 
         print('Done.')
 
         # run:
+        save_path = None
         print('\n** Begin training:')
         if latest_ckpt_path is None:
             test_once(0)
-            save_once(0)
+            save_path = save_once(0)
         else:
             test_once(step)
 
         t = time.time()
-        save_flag = False
+        save_flag_max = False
+        save_flag_final = False
         while (steps_to_run is None) or (steps_to_run > 0):
+            save_flag_final = True
             step = tf.train.global_step(sess, self.global_step) + 1
             train_once(step)
             if (step % test_interval) == 0:
@@ -278,21 +287,25 @@ class MyEstimator:
                 print('time: test_once %.6fs' % (time.time() - t))
                 if tmp > np.mean(save_max_psnr[-5:]):
                     save_max_psnr.append(tmp)
-                    save_flag = True
+                    save_flag_max = True
                 t = time.time()
-            if ((step % save_interval) == 0) or save_flag:
+            if ((step % save_interval) == 0) or save_flag_max:
                 t = time.time()
-                save_once(step)
-                if save_flag:
+                save_path = save_once(step)
+                if save_flag_max:
                     print(save_max_psnr[-6:])
-                save_flag = False
+                save_flag_max = False
+                save_flag_final = False
                 print('time: save_once %.6fs' % (time.time() - t))
                 t = time.time()
             if steps_to_run is not None:
                 steps_to_run -= 1
 
+        if save_flag_final:
+            save_path = save_once(step)
         sess.close()
         print('\nALL DONE.')
+        return save_path
 
     def evaluate(self,
                  ckpt_path,

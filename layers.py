@@ -439,7 +439,7 @@ def dataset_YUV(input_path, label_path, batch_size, patch_height, patch_width, s
     return 'ALL DONE.'
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # Run this file to get parameter-file size.
     print('logs: define grapth...\n')
     inputs = tf.placeholder(tf.float32, [None, 41, 41, 1])
     drrn = DRRN(inputs, 1, 9, 32, True, 'DRRNoverfit_B1U9C32', True, False, False, collections=['var_list'])

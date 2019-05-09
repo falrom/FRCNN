@@ -5,6 +5,7 @@ import shutil
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('-g', '--GPU', default='0', help='the GPU No. to use')
     parser.add_argument('-i', '--input', required=True, help='Checkpoint path.')
     args = parser.parse_args()
 
@@ -20,9 +21,9 @@ if __name__ == '__main__':
     path_dehuffman = name_dehuffman + ext
     path_dehuffman_index = name_dehuffman + '.index'
 
-    transform_ckpt_bit_width(name_orig, name_16bit, '16')
+    transform_ckpt_bit_width(name_orig, name_16bit, '16', args.GPU)
     hc = HuffmanCodec()
     hc.compress(path_16bit, path_huffman)
     hc.uncompress(path_huffman, path_dehuffman)
     shutil.copyfile(name_16bit + '.index', path_dehuffman_index)
-    transform_ckpt_bit_width(name_dehuffman, name_32bit, '32')
+    transform_ckpt_bit_width(name_dehuffman, name_32bit, '32', args.GPU)

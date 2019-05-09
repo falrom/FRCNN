@@ -35,7 +35,7 @@ parser_train.add_argument('--no_BN_ru', action='store_true', default=False,
 parser_train.add_argument('--no_BN_end', action='store_true', default=False,
                           help='if you do NOT want to use BatchNormalization layer at the end of the DRRN net')
 parser_train.add_argument('--L1', action='store_true', default=False, help='if you want to use the L1 loss to train')
-parser_train.add_argument('--optimizer', default='adam', help='The optimizer you want to use ("adam" or "sgd").')
+parser_train.add_argument('--optimizer', default='adam', help='the optimizer you want to use ("adam" or "sgd")')
 
 # evaluate mode:
 parser_evaluate = subparsers.add_parser(
@@ -80,6 +80,7 @@ if args.mode is None:
     parser.print_help()
     exit()
 
+os.environ["CUDA_DEVICE_ORDER"] = 'PCI_BUS_ID'
 os.environ["CUDA_VISIBLE_DEVICES"] = args.GPU
 print('\n** GPU selection:', os.environ["CUDA_VISIBLE_DEVICES"])
 

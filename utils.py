@@ -1,6 +1,8 @@
+import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 import cv2
+import sys
 import os
 import time
 
@@ -19,15 +21,13 @@ def record_info(info_list, file_path):
                 file.write(str(key) + ' : ' + str(value) + '\n')
 
 
-def progress_bar(done_num, total_num, length=40):
-    if total_num == 0:
-        print('Error: Total number is 0.')
-        return
-    percent = done_num / total_num
-    show = int(length * percent)
-    bar = '|' + '=' * show + ' ' * (length - show) + '| (' + \
-          str(int(percent * 100)) + '%) ' + str(done_num) + ' of ' + str(total_num) + ' ' * 10
-    print(bar, end='\r')
+def progress_bar(done_num, total_num, width=40):
+    rate = done_num / total_num
+    rate_num = int(rate * width)
+    r = '\r[%s%s] (%d%%) %d done of %d          ' % \
+        ("=" * rate_num, " " * (width - rate_num), int(rate * 100), done_num, total_num)
+    sys.stdout.write(r)
+    sys.stdout.flush()
 
 
 def get_time_str():
@@ -51,6 +51,56 @@ def cv_imwrite(output_path, img, channel='BGR', ext='.png'):
     if channel == 'RGB':
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     cv2.imencode(ext, img)[1].tofile(output_path)
+
+
+def info_of_tensor(ts):
+    print(ts.op.name, ts.get_shape().as_list())
+
+
+def draw_weight(weight, shape=None, pad=1, title=None, dpi=200):
+    """
+    Show the weights in pictures.
+    :param weight: The result of Session.run(weight_tensor).
+    :param shape: The shape of weight_tensor.
+    :param pad: The gap between pictures.
+    :param title: Figure title.
+    """
+    if shape is None:
+        shape = np.shape(weight)
+    h, w, i, o = shape
+    image = np.zeros([i * (h + 2 * pad), o * (w + 2 * pad)])
+    for inc in range(i):
+        for outc in range(o):
+            image[inc * (h + 2 * pad) + 1:inc * (h + 2 * pad) + 1 + h,
+            outc * (w + 2 * pad) + 1:outc * (w + 2 * pad) + 1 + w] = weight[:, :, inc, outc]
+    plt.figure(dpi=dpi)
+    if title:
+        plt.title(title)
+    plt.imshow(image, cmap='gray')
+    # plt.show()
+
+
+def draw_feature(feat, shape=None, pad=1, title=None, dpi=200):
+    '''
+    Show the intermediate features in pictures.
+    :param feat: The result of Session.run(feature_tensor).
+    :param shape: The shape of feature_tensor.
+    :param pad: The gap between pictures.
+    :param title: Figure title.
+    '''
+    if shape is None:
+        shape = np.shape(feat)
+    i, h, w, o = shape
+    image = np.zeros([i * (h + 2 * pad), o * (w + 2 * pad)])
+    for inc in range(i):
+        for outc in range(o):
+            image[inc * (h + 2 * pad) + 1:inc * (h + 2 * pad) + 1 + h,
+            outc * (w + 2 * pad) + 1:outc * (w + 2 * pad) + 1 + w] = feat[inc, :, :, outc]
+    plt.figure(dpi=dpi)
+    if title:
+        plt.title(title)
+    plt.imshow(image, cmap='gray')
+    # plt.show()
 
 
 def YUVread(path, size, frame_num=None, start_frame=0, mode='420'):
@@ -285,7 +335,7 @@ def calculate_variables(var_list, print_vars=False):
     print('Variables  size  : %f Mb' % (all_size * 8 / 1024 / 1024))
 
 
-def transform_ckpt_bit_width(ckpt_path, output_path, bit_width):
+def transform_ckpt_bit_width(ckpt_path, output_path, bit_width, gpu='0'):
     dtype_dict = {
         '16': tf.float16,
         '32': tf.float32
@@ -304,6 +354,8 @@ def transform_ckpt_bit_width(ckpt_path, output_path, bit_width):
         init = tf.global_variables_initializer()
         saver = tf.train.Saver()
 
+    os.environ["CUDA_DEVICE_ORDER"] = 'PCI_BUS_ID'
+    os.environ["CUDA_VISIBLE_DEVICES"] = gpu
     with tf.Session(graph=graph) as sess:
         sess.run(init)
         saver.save(sess=sess, save_path=output_path, write_meta_graph=False)
