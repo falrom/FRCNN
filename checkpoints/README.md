@@ -1,1 +1,1 @@
-Checkpoint dir.
+# Checkpoints dir

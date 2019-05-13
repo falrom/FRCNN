@@ -8,7 +8,7 @@ We herein propose an efficient video coding system with online training neural n
 
 ## How to run the project
 
-platform: Tensorflow 1.10 @ Python 3.6
+Platform: Tensorflow 1.10 @ Python 3.6
 
 ### Prepare dataset
 
