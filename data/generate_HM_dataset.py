@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
     QPs = [22, 27 ,32, 37]
     frame_bgn = 0
-    frame_num = 2
+    frame_num = 50
 
     for i in range(5):
         for QP in QPs:
