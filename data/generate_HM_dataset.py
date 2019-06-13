@@ -74,7 +74,7 @@ def generate_dataset(
     #     path_bin + ' --qp ' + str(QP) + ' --ipratio 1 --bframes 0 --psnr --ssim 1>>encode.log 2>&1')
     # print('Decoding...')
     # os.system('TAppDecoder.exe -b ' + path_bin + ' -o ' + path_rec + ' 1>>decode.log 2>&1')
-    os.system('TAppEncoder.exe -c encoder_lowdelay_P_main.cfg -c ' + cfg_name + ' -q ' + str(QP) + ' -b ' + path_bin + ' -o ' + path_rec + ' -f ' + str(frame_num) + ' > ' + OrigName + '_' + 'Encode_log_QP' + str(QP) +'.txt')
+    os.system('TAppEncoder.exe -c encoder_randomaccess_main.cfg -c ' + cfg_name + ' -q ' + str(QP) + ' -b ' + path_bin + ' -o ' + path_rec + ' -f ' + str(frame_num) + ' > ' + OrigName + '_' + 'Encode_log_QP' + str(QP) +'.txt')
     print('Done.')
 
     # Generate TFrecords files ##################################################################
