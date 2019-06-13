@@ -43,7 +43,7 @@ def generate_dataset(
 
     StartNum = str('%03d' % frame_bgn)
     EndNum = str('%03d' % (frame_bgn + frame_num - 1))
-    mode = 'IP'
+    mode = 'RA'  # RA: RandomAcess
 
     path_cut = './videos/' + OrigName + '_' + StartNum + 'to' + EndNum + '.yuv'
     path_bin = './videos/' + OrigName + '_' + StartNum + 'to' + EndNum + '_QP' + str(QP) + '_' + mode + '_HM.bin'
